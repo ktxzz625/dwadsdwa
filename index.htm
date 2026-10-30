@@ -193,6 +193,12 @@ h1 {
     <p class="big">Ai, que maldade!</p>
     <button class="btn again" id="again" type="button">Perguntar de novo</button>
   </div>
+
+  <div id="win" class="result" hidden>
+    <p class="emoji" aria-hidden="true">💜</p>
+    <p class="big">Que bom que você insistiu!</p>
+    <button class="btn again" id="again2" type="button">Começar de novo</button>
+  </div>
 </main>
 
 <script>
@@ -204,6 +210,8 @@ h1 {
   var countEl = document.getElementById("count");
   var ask = document.getElementById("ask");
   var result = document.getElementById("result");
+  var win = document.getElementById("win");
+  var again2 = document.getElementById("again2");
   var again = document.getElementById("again");
   var moved = false, count = 0, busy = 0;
   var taunts = [
@@ -261,6 +269,11 @@ h1 {
     count += 1;
     countEl.textContent = count;
     hint.textContent = taunts[(count - 1) % taunts.length];
+    if (count >= 100) {
+      ask.hidden = true;
+      win.hidden = false;
+      again2.focus();
+    }
   }
 
   function dodge(e) {
@@ -283,8 +296,9 @@ h1 {
     again.focus();
   });
 
-  again.addEventListener("click", function () {
+  function reset() {
     result.hidden = true;
+    win.hidden = true;
     ask.hidden = false;
     nao.style.position = ""; nao.style.left = ""; nao.style.top = ""; nao.style.margin = "";
     slot.style.display = ""; slot.style.width = ""; slot.style.height = "";
@@ -292,7 +306,9 @@ h1 {
     countEl.textContent = "0";
     hint.textContent = "Pense bem antes de responder.";
     sim.focus();
-  });
+  }
+  again.addEventListener("click", reset);
+  again2.addEventListener("click", reset);
 
   window.addEventListener("resize", function () {
     if (!moved) return;
