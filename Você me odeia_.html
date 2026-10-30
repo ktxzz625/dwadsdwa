@@ -1,0 +1,307 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Você me odeia?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: uma pergunta grande no centro, dois botões embaixo; o "Não" escapa para qualquer canto da tela. */
+:root {
+  --bg: #f8f0fb;
+  --fg: #2c2040;
+  --muted: #6b5b85;
+  --accent: #d63f78;
+  --accent-ink: #ffffff;
+  --line: #c9b5df;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1328;
+    --fg: #f6ecff;
+    --muted: #b9a6d3;
+    --accent: #ff6f9f;
+    --accent-ink: #2a0f1d;
+    --line: #5a4577;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1328;
+  --fg: #f6ecff;
+  --muted: #b9a6d3;
+  --accent: #ff6f9f;
+  --accent-ink: #2a0f1d;
+  --line: #5a4577;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.5;
+  padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+.stage {
+  width: 100%;
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 12vw, 4.2rem);
+  line-height: 1.02;
+  text-wrap: balance;
+  color: var(--accent);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  min-height: 52px;
+  padding: 0 34px;
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.btn:focus-visible { outline: 3px solid var(--fg); outline-offset: 4px; }
+
+.sim {
+  border: 0;
+  color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--accent) 65%, transparent);
+  transition: transform 0.2s ease;
+}
+.sim:hover { transform: scale(1.05); }
+.sim:active { transform: scale(0.96); }
+
+.nao {
+  border: 2px solid var(--line);
+  color: var(--fg);
+  background: var(--bg);
+  white-space: nowrap;
+  z-index: 5;
+  transition: left 0.28s cubic-bezier(0.3, 1.5, 0.5, 1), top 0.28s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.hint {
+  margin: 0;
+  min-height: 1.6em;
+  color: var(--muted);
+  font-size: 1rem;
+  text-wrap: balance;
+}
+.count {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.result { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.result p { margin: 0; }
+.result .emoji {
+  font-size: clamp(5rem, 28vw, 8rem);
+  line-height: 1;
+  animation: pop 0.55s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+@keyframes pop {
+  from { transform: scale(0.2); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .result .emoji { animation: none; }
+}
+.result .big {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 9vw, 3rem);
+  line-height: 1.1;
+  text-wrap: balance;
+  color: var(--accent);
+}
+.result .sub {
+  font-size: 1.15rem;
+  text-wrap: balance;
+}
+.again {
+  border: 2px solid var(--line);
+  color: var(--fg);
+  background: transparent;
+  font-size: 1rem;
+  min-height: 46px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nao { transition: none; }
+  .sim { transition: none; }
+}
+</style>
+
+<main class="stage" id="stage">
+  <p class="kicker">Pergunta séria</p>
+
+  <div id="ask" class="stage" style="gap:28px">
+    <h1>Você me odeia?</h1>
+    <div class="row" id="row">
+      <button class="btn sim" id="sim" type="button">Sim</button>
+      <span class="slot" id="slot"><button class="btn nao" id="nao" type="button">Não</button></span>
+    </div>
+    <p class="hint" id="hint" aria-live="polite">Pense bem antes de responder.</p>
+    <p class="count">Tentativas de dizer não: <span id="count">0</span></p>
+  </div>
+
+  <div id="result" class="result" hidden>
+    <p class="emoji" aria-hidden="true">😢</p>
+    <p class="big">Ai, que maldade!</p>
+    <button class="btn again" id="again" type="button">Perguntar de novo</button>
+  </div>
+</main>
+
+<script>
+(function () {
+  var nao = document.getElementById("nao");
+  var sim = document.getElementById("sim");
+  var slot = document.getElementById("slot");
+  var hint = document.getElementById("hint");
+  var countEl = document.getElementById("count");
+  var ask = document.getElementById("ask");
+  var result = document.getElementById("result");
+  var again = document.getElementById("again");
+  var moved = false, count = 0, busy = 0;
+  var taunts = [
+    "Opa, escapou!",
+    "Quase! Tenta de novo.",
+    "Esse botão tem vida própria.",
+    "Não adianta, ele corre mais que você.",
+    "Eu avisei que era uma pergunta séria.",
+    "Vai desistir? O Sim está logo ali.",
+    "Já perdi a conta de quantas vezes ele fugiu.",
+    "Esse Não está com medo de você."
+  ];
+  var M = 16;
+
+  function rectOf(el) { return el.getBoundingClientRect(); }
+
+  function fixInPlace() {
+    var r = rectOf(nao);
+    slot.style.display = "inline-block";
+    slot.style.width = r.width + "px";
+    slot.style.height = r.height + "px";
+    nao.style.position = "fixed";
+    nao.style.left = r.left + "px";
+    nao.style.top = r.top + "px";
+    nao.style.margin = "0";
+    void nao.offsetWidth;
+    moved = true;
+  }
+
+  function overlaps(a, b, pad) {
+    return !(a.right + pad < b.left || a.left - pad > b.right || a.bottom + pad < b.top || a.top - pad > b.bottom);
+  }
+
+  function flee() {
+    if (!moved) fixInPlace();
+    var w = nao.offsetWidth, h = nao.offsetHeight;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var maxX = Math.max(M, vw - w - M), maxY = Math.max(M, vh - h - M);
+    var cur = rectOf(nao);
+    var simR = rectOf(sim);
+    var best = null;
+    for (var i = 0; i < 40; i++) {
+      var x = M + Math.random() * (maxX - M);
+      var y = M + Math.random() * (maxY - M);
+      var box = { left: x, top: y, right: x + w, bottom: y + h };
+      var dx = x - cur.left, dy = y - cur.top;
+      if (overlaps(box, simR, 24)) continue;
+      if (Math.sqrt(dx * dx + dy * dy) < 140 && i < 30) continue;
+      best = { x: x, y: y };
+      break;
+    }
+    if (!best) best = { x: maxX, y: maxY };
+    nao.style.left = best.x + "px";
+    nao.style.top = best.y + "px";
+    count += 1;
+    countEl.textContent = count;
+    hint.textContent = taunts[(count - 1) % taunts.length];
+  }
+
+  function dodge(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    var now = Date.now();
+    if (now - busy < 120) return;
+    busy = now;
+    flee();
+  }
+
+  nao.addEventListener("pointerenter", dodge);
+  nao.addEventListener("pointerdown", dodge);
+  nao.addEventListener("touchstart", dodge, { passive: false });
+  nao.addEventListener("focus", dodge);
+  nao.addEventListener("click", dodge);
+
+  sim.addEventListener("click", function () {
+    ask.hidden = true;
+    result.hidden = false;
+    again.focus();
+  });
+
+  again.addEventListener("click", function () {
+    result.hidden = true;
+    ask.hidden = false;
+    nao.style.position = ""; nao.style.left = ""; nao.style.top = ""; nao.style.margin = "";
+    slot.style.display = ""; slot.style.width = ""; slot.style.height = "";
+    moved = false; count = 0;
+    countEl.textContent = "0";
+    hint.textContent = "Pense bem antes de responder.";
+    sim.focus();
+  });
+
+  window.addEventListener("resize", function () {
+    if (!moved) return;
+    var maxX = Math.max(M, window.innerWidth - nao.offsetWidth - M);
+    var maxY = Math.max(M, window.innerHeight - nao.offsetHeight - M);
+    nao.style.left = Math.min(parseFloat(nao.style.left) || M, maxX) + "px";
+    nao.style.top = Math.min(parseFloat(nao.style.top) || M, maxY) + "px";
+  });
+})();
+</script>
+
+</body></html>
